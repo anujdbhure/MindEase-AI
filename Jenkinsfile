@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME    = "YOUR_DOCKERHUB_USERNAME/mindease-ai"
+        IMAGE_NAME    = "anujdbhure/mindease-ai"
         IMAGE_TAG     = "v${BUILD_NUMBER}"
         REGISTRY_CRED = "dockerhub-credentials"   // Jenkins credential ID
         KUBECONFIG    = "/var/lib/jenkins/.kube/config"
