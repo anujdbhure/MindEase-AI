@@ -21,8 +21,20 @@ pipeline {
             steps {
                 echo "Installing dependencies and running tests..."
                 sh """
-                    pip install --quiet -r requirements.txt
-                    pytest tests/ -v
+                  
+stage("Build & Test") {
+    steps {
+        echo "Installing dependencies and running tests..."
+        sh '''
+            python3 -m venv .venv
+            . .venv/bin/activate
+            python -m pip install --upgrade pip
+            python -m pip install --quiet -r requirements.txt
+            python -m pytest tests/ -v
+        '''
+    }
+}
+
                 """
             }
         }
