@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MindEase AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#08090C;
+  --bg2:#0F1117;
+  --bg3:#161B26;
+  --bg4:#1E2535;
+  --border:#232B3E;
+  --border2:#2E3A52;
+  --text:#E8EBF2;
+  --text2:#8892A4;
+  --text3:#4F5B72;
+  --accent:#7C9EF8;
+  --accent2:#A78BFA;
+  --accent3:#67E8C8;
+  --accent4:#F9A8D4;
+  --warn:#FBB96B;
+  --good:#67E8C8;
+  --mid:#F9A8D4;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:0.5px solid var(--border);background:var(--bg);}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-dot{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#7C9EF8,#A78BFA);display:flex;align-items:center;justify-content:center;}
+.logo-dot svg{width:14px;height:14px;}
+.logo-name{font-size:15px;font-weight:500;letter-spacing:-0.2px;}
+.logo-name span{color:var(--accent);}
+.nav-pills{display:flex;gap:4px;}
+.nav-pill{padding:6px 14px;border-radius:20px;font-size:13px;color:var(--text2);cursor:pointer;transition:all .15s;border:none;background:none;}
+.nav-pill:hover{color:var(--text);background:var(--bg3);}
+.nav-pill.active{color:var(--text);background:var(--bg3);border:0.5px solid var(--border2);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.streak{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--warn);font-weight:500;}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3B4D6E,#4A3F6B);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2);}
+
+/* LAYOUT */
+.main{display:grid;grid-template-columns:260px 1fr 280px;gap:0;height:calc(100vh - 61px);}
+
+/* SIDEBAR */
+.sidebar{padding:24px 20px;border-right:0.5px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+.sidebar-section{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;padding:16px 8px 8px;}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .15s;font-size:13px;color:var(--text2);}
+.sidebar-item:hover{background:var(--bg3);color:var(--text);}
+.sidebar-item.active{background:var(--bg3);color:var(--text);border:0.5px solid var(--border2);}
+.sidebar-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.si-blue{background:rgba(124,158,248,.1);}
+.si-purple{background:rgba(167,139,250,.1);}
+.si-teal{background:rgba(103,232,200,.1);}
+.si-pink{background:rgba(249,168,212,.1);}
+.si-amber{background:rgba(251,185,107,.1);}
+.mood-mini{margin-top:auto;padding:16px;background:var(--bg3);border-radius:12px;border:0.5px solid var(--border);}
+.mood-mini-label{font-size:11px;color:var(--text3);margin-bottom:10px;}
+.mood-dots{display:flex;gap:6px;}
+.mood-dot{width:28px;height:28px;border-radius:50%;border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all .15s;}
+.mood-dot:hover{border-color:var(--accent);transform:scale(1.1);}
+.mood-dot.picked{border-color:var(--accent);background:rgba(124,158,248,.15);}
+
+/* CENTER */
+.center{overflow-y:auto;padding:28px 32px;}
+.greeting{margin-bottom:28px;}
+.greeting-sub{font-size:12px;color:var(--text3);margin-bottom:4px;font-weight:500;letter-spacing:.5px;}
+.greeting-main{font-size:26px;font-weight:300;letter-spacing:-.5px;line-height:1.2;}
+.greeting-main em{font-family:'Playfair Display',serif;font-style:italic;color:var(--accent);}
+
+/* MOOD CARD */
+.mood-card{background:var(--bg3);border:0.5px solid var(--border2);border-radius:16px;padding:22px;margin-bottom:20px;}
+.mood-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.card-title{font-size:13px;font-weight:500;color:var(--text2);}
+.card-tag{font-size:11px;padding:3px 9px;border-radius:20px;background:rgba(124,158,248,.12);color:var(--accent);font-weight:500;}
+.mood-scale{display:flex;gap:8px;margin-bottom:16px;}
+.mood-btn{flex:1;padding:10px 0;border-radius:10px;border:0.5px solid var(--border2);background:var(--bg2);font-size:18px;cursor:pointer;transition:all .15s;text-align:center;}
+.mood-btn:hover{border-color:var(--accent2);background:rgba(167,139,250,.08);transform:translateY(-1px);}
+.mood-btn.sel{border-color:var(--accent);background:rgba(124,158,248,.15);box-shadow:0 0 12px rgba(124,158,248,.15);}
+.mood-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
+.mood-text-area{width:100%;margin-top:14px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;resize:none;outline:none;transition:border-color .15s;}
+.mood-text-area:focus{border-color:var(--accent2);}
+.mood-text-area::placeholder{color:var(--text3);}
+.submit-row{display:flex;justify-content:flex-end;margin-top:12px;}
+.submit-btn{padding:9px 20px;border-radius:20px;background:linear-gradient(135deg,rgba(124,158,248,.2),rgba(167,139,250,.2));border:0.5px solid var(--accent2);color:var(--accent);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.submit-btn:hover{background:linear-gradient(135deg,rgba(124,158,248,.3),rgba(167,139,250,.3));}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.stat-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:12px;padding:16px;}
+.stat-val{font-size:24px;font-weight:300;letter-spacing:-1px;margin-bottom:2px;}
+.stat-lbl{font-size:11px;color:var(--text3);}
+.stat-delta{font-size:11px;margin-top:6px;display:flex;align-items:center;gap:4px;}
+.delta-up{color:var(--good);}
+.delta-down{color:var(--mid);}
+
+/* INSIGHT CARDS */
+.insights-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
+.insight-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;cursor:pointer;transition:border-color .15s;}
+.insight-card:hover{border-color:var(--border2);}
+.insight-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.insight-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.insight-heading{font-size:14px;font-weight:500;line-height:1.3;}
+.insight-body{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px;}
+.insight-footer{display:flex;align-items:center;justify-content:space-between;}
+.insight-action{font-size:12px;color:var(--accent);cursor:pointer;font-weight:500;}
+.insight-source{font-size:11px;color:var(--text3);}
+
+/* RIGHT PANEL */
+.right-panel{border-left:0.5px solid var(--border);overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:20px;}
+.panel-section-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
+
+/* BREATH WIDGET */
+.breath-widget{background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:20px;text-align:center;}
+.breath-circle-wrap{position:relative;width:100px;height:100px;margin:0 auto 14px;}
+.breath-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--border2);}
+.breath-orb{position:absolute;inset:12px;border-radius:50%;background:radial-gradient(circle,rgba(124,158,248,.3),rgba(167,139,250,.1));transition:transform 4s ease-in-out;}
+.breath-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text2);font-weight:500;}
+.breath-title{font-size:13px;font-weight:500;margin-bottom:4px;}
+.breath-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:14px;}
+.breath-start{width:100%;padding:9px;border-radius:20px;background:rgba(124,158,248,.1);border:0.5px solid var(--border2);color:var(--accent);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;}
+.breath-start:hover{background:rgba(124,158,248,.2);}
+
+/* MOOD HISTORY */
+.mood-history{display:flex;flex-direction:column;gap:6px;}
+.mh-row{display:flex;align-items:center;gap:10px;}
+.mh-bar-wrap{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;}
+.mh-bar{height:100%;border-radius:2px;transition:width .6s ease;}
+.mh-day{font-size:11px;color:var(--text3);width:28px;}
+.mh-score{font-size:11px;color:var(--text2);width:16px;text-align:right;}
+
+/* TIPS */
+.tip-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:12px;padding:16px;}
+.tip-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--accent3);margin-bottom:6px;}
+.tip-text{font-size:13px;color:var(--text2);line-height:1.6;}
+
+/* AI CHAT BAR */
+.ai-bar{background:var(--bg3);border:0.5px solid var(--border2);border-radius:12px;padding:14px 16px;display:flex;gap:10px;align-items:center;}
+.ai-input{flex:1;background:none;border:none;outline:none;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);}
+.ai-input::placeholder{color:var(--text3);}
+.ai-send{width:30px;height:30px;border-radius:8px;background:rgba(124,158,248,.15);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0;}
+.ai-send:hover{background:rgba(124,158,248,.3);}
+.ai-send svg{width:13px;height:13px;stroke:var(--accent);}
+
+/* AI RESPONSE */
+.ai-response{background:linear-gradient(135deg,rgba(124,158,248,.05),rgba(167,139,250,.05));border:0.5px solid rgba(124,158,248,.2);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--text2);line-height:1.6;display:none;}
+.ai-response.visible{display:block;}
+.ai-response-label{font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* LOADING */
+.loading-dots{display:flex;gap:4px;padding:4px 0;}
+.ld{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:ldp 1.2s infinite;}
+.ld:nth-child(2){animation-delay:.2s;}
+.ld:nth-child(3){animation-delay:.4s;}
+@keyframes ldp{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+
+/* SCROLL */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-dot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" opacity=".3"/><path d="M12 8v4l3 3"/></svg>
+    </div>
+    <span class="logo-name">Mind<span>Ease</span> AI</span>
+  </div>
+  <div class="nav-pills">
+    <button class="nav-pill active">Dashboard</button>
+    <button class="nav-pill">Journal</button>
+    <button class="nav-pill">Progress</button>
+    <button class="nav-pill">Resources</button>
+  </div>
+  <div class="nav-right">
+    <div class="streak">🔥 7-day streak</div>
+    <div class="avatar">AS</div>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">Tools</div>
+    <div class="sidebar-item active">
+      <div class="sidebar-icon si-blue">🧠</div> AI Insights
+    </div>
+    <div class="sidebar-item">
+      <div class="sidebar-icon si-teal">🌿</div> Breathing
+    </div>
+    <div class="sidebar-item">
+      <div class="sidebar-icon si-purple">📓</div> Mood Journal
+    </div>
+    <div class="sidebar-item">
+      <div class="sidebar-icon si-pink">💬</div> Talk to AI
+    </div>
+    <div class="sidebar-item">
+      <div class="sidebar-icon si-amber">📊</div> Weekly Report
+    </div>
+
+    <div class="sidebar-section">Techniques</div>
+    <div class="sidebar-item">
+      <div class="sidebar-icon si-teal">🧘</div> Meditation
+    </div>
+    <div class="sidebar-item">
+      <div class="sidebar-icon si-blue">✍️</div> Gratitude Log
+    </div>
+    <div class="sidebar-item">
+      <div class="sidebar-icon si-pink">😴</div> Sleep Tracker
+    </div>
+
+    <div class="mood-mini">
+      <div class="mood-mini-label">Quick mood check</div>
+      <div class="mood-dots">
+        <div class="mood-dot" onclick="quickMood(this)">😢</div>
+        <div class="mood-dot" onclick="quickMood(this)">😕</div>
+        <div class="mood-dot" onclick="quickMood(this)">😐</div>
+        <div class="mood-dot" onclick="quickMood(this)">🙂</div>
+        <div class="mood-dot" onclick="quickMood(this)">😊</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CENTER -->
+  <main class="center">
+    <div class="greeting">
+      <div class="greeting-sub">Monday · Oct 26</div>
+      <div class="greeting-main">Good evening, <em>Arjun</em></div>
+    </div>
+
+    <!-- MOOD CHECK-IN -->
+    <div class="mood-card">
+      <div class="mood-card-header">
+        <span class="card-title">How are you feeling right now?</span>
+        <span class="card-tag">Daily check-in</span>
+      </div>
+      <div class="mood-scale" id="moodScale">
+        <button class="mood-btn" onclick="selectMood(this,'😔','Low')">😔</button>
+        <button class="mood-btn" onclick="selectMood(this,'😕','Uneasy')">😕</button>
+        <button class="mood-btn" onclick="selectMood(this,'😐','Neutral')">😐</button>
+        <button class="mood-btn" onclick="selectMood(this,'🙂','Good')">🙂</button>
+        <button class="mood-btn" onclick="selectMood(this,'😊','Great')">😊</button>
+      </div>
+      <div class="mood-label">
+        <span>Low energy</span>
+        <span>High energy</span>
+      </div>
+      <textarea class="mood-text-area" rows="2" placeholder="What's on your mind today? (optional)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" onclick="getInsight()">Get AI insights →</button>
+      </div>
+    </div>
+
+    <!-- AI RESPONSE -->
+    <div class="ai-response" id="aiResp">
+      <div class="ai-response-label">
+        <span class="ai-dot"></span> MindEase AI
+      </div>
+      <div id="aiRespText"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val" style="color:var(--accent)">6.8</div>
+        <div class="stat-lbl">Avg mood this week</div>
+        <div class="stat-delta delta-up">↑ 0.4 vs last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" style="color:var(--accent3)">12</div>
+        <div class="stat-lbl">Check-ins this month</div>
+        <div class="stat-delta delta-up">↑ 3 more than last month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" style="color:var(--accent2)">7</div>
+        <div class="stat-lbl">Day streak</div>
+        <div class="stat-delta delta-down">Keep it going!</div>
+      </div>
+    </div>
+
+    <!-- INSIGHTS -->
+    <div class="insights-label">AI Insights for you</div>
+
+    <div class="insight-card" onclick="askClaude('Tell me more about managing afternoon stress')">
+      <div class="insight-top">
+        <div class="insight-icon si-amber">☀️</div>
+        <div class="insight-heading">Your stress peaks around 3–5 PM on weekdays</div>
+      </div>
+      <div class="insight-body">Based on your check-ins over the past 3 weeks, your mood tends to dip during late afternoon. This aligns with natural cortisol patterns. A short walk or 5-minute breathing session could shift this.</div>
+      <div class="insight-footer">
+        <span class="insight-action" onclick="event.stopPropagation();askClaude('Give me a custom afternoon stress routine')">Try a routine →</span>
+        <span class="insight-source">Based on 21 check-ins</span>
+      </div>
+    </div>
+
+    <div class="insight-card" onclick="askClaude('How can I improve my sleep quality for better mental health?')">
+      <div class="insight-top">
+        <div class="insight-icon si-purple">🌙</div>
+        <div class="insight-heading">Sleep quality is linked to your Monday mood dips</div>
+      </div>
+      <div class="insight-body">You consistently rate Mondays lower than other days. Your journal mentions restless sleep on Sunday nights. Reducing screen time before bed and a consistent wind-down routine can help break this cycle.</div>
+      <div class="insight-footer">
+        <span class="insight-action" onclick="event.stopPropagation();askClaude('Create a Sunday night wind-down routine for me')">Build a routine →</span>
+        <span class="insight-source">Pattern from last 5 weeks</span>
+      </div>
+    </div>
+
+    <div class="insight-card" onclick="askClaude('What positive affirmations work best for anxiety?')">
+      <div class="insight-top">
+        <div class="insight-icon si-teal">📈</div>
+        <div class="insight-heading">You've improved 23% in self-reported anxiety</div>
+      </div>
+      <div class="insight-body">Since starting the daily check-ins and breathing exercises four weeks ago, your anxiety scores have trended steadily downward. The journaling habit you built is contributing significantly to this progress.</div>
+      <div class="insight-footer">
+        <span class="insight-action" onclick="event.stopPropagation();askClaude('What should I do next to continue improving?')">Next steps →</span>
+        <span class="insight-source">Compared to baseline</span>
+      </div>
+    </div>
+
+    <!-- ASK AI -->
+    <div class="insights-label" style="margin-top:8px;">Ask your AI coach</div>
+    <div class="ai-bar">
+      <input class="ai-input" id="aiInput" placeholder="Ask anything — coping strategies, sleep tips, motivation…" />
+      <div class="ai-send" onclick="askClaude()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </div>
+    </div>
+    <div id="chatResp" style="margin-top:12px;"></div>
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="right-panel">
+
+    <!-- BREATHING -->
+    <div>
+      <div class="panel-section-title">Breathing exercise</div>
+      <div class="breath-widget">
+        <div class="breath-circle-wrap">
+          <div class="breath-ring"></div>
+          <div class="breath-orb" id="breathOrb"></div>
+          <div class="breath-center" id="breathLabel">Ready</div>
+        </div>
+        <div class="breath-title">4-7-8 Technique</div>
+        <div class="breath-desc">Inhale for 4s, hold for 7s, exhale for 8s. Activates your parasympathetic nervous system.</div>
+        <button class="breath-start" id="breathBtn" onclick="startBreath()">Start session</button>
+      </div>
+    </div>
+
+    <!-- MOOD HISTORY -->
+    <div>
+      <div class="panel-section-title">This week's mood</div>
+      <div class="mood-history">
+        <div class="mh-row">
+          <span class="mh-day">Mon</span>
+          <div class="mh-bar-wrap"><div class="mh-bar" style="width:60%;background:var(--mid)"></div></div>
+          <span class="mh-score">6</span>
+        </div>
+        <div class="mh-row">
+          <span class="mh-day">Tue</span>
+          <div class="mh-bar-wrap"><div class="mh-bar" style="width:72%;background:var(--accent)"></div></div>
+          <span class="mh-score">7.2</span>
+        </div>
+        <div class="mh-row">
+          <span class="mh-day">Wed</span>
+          <div class="mh-bar-wrap"><div class="mh-bar" style="width:65%;background:var(--accent)"></div></div>
+          <span class="mh-score">6.5</span>
+        </div>
+        <div class="mh-row">
+          <span class="mh-day">Thu</span>
+          <div class="mh-bar-wrap"><div class="mh-bar" style="width:80%;background:var(--good)"></div></div>
+          <span class="mh-score">8</span>
+        </div>
+        <div class="mh-row">
+          <span class="mh-day">Fri</span>
+          <div class="mh-bar-wrap"><div class="mh-bar" style="width:75%;background:var(--good)"></div></div>
+          <span class="mh-score">7.5</span>
+        </div>
+        <div class="mh-row">
+          <span class="mh-day">Sat</span>
+          <div class="mh-bar-wrap"><div class="mh-bar" style="width:85%;background:var(--good)"></div></div>
+          <span class="mh-score">8.5</span>
+        </div>
+        <div class="mh-row">
+          <span class="mh-day">Sun</span>
+          <div class="mh-bar-wrap"><div class="mh-bar" style="width:68%;background:var(--accent)"></div></div>
+          <span class="mh-score">6.8</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAILY TIP -->
+    <div>
+      <div class="panel-section-title">Today's tip</div>
+      <div class="tip-card">
+        <div class="tip-tag">Cognitive reframing</div>
+        <div class="tip-text">When a negative thought arises, ask: "Is this fact or interpretation?" Most anxiety-triggering thoughts are interpretations — not facts. Name the thought, and it loses power.</div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div>
+      <div class="panel-section-title">Quick actions</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <button class="breath-start" onclick="askClaude('Give me a quick 5-minute meditation script for stress relief')">🧘 5-min guided meditation</button>
+        <button class="breath-start" onclick="askClaude('Write 3 personalized gratitude prompts for me today')">✍️ Gratitude prompts</button>
+        <button class="breath-start" onclick="askClaude('Give me a CBT thought record for managing negative thoughts right now')">💭 CBT thought record</button>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<script>
+let selectedMood = null;
+let breathRunning = false;
+let breathTimer = null;
+
+function selectMood(btn, emoji, label) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  selectedMood = {emoji, label};
+}
+
+function quickMood(dot) {
+  document.querySelectorAll('.mood-dot').forEach(d => d.classList.remove('picked'));
+  dot.classList.add('picked');
+}
+
+async function getInsight() {
+  const mood = selectedMood ? selectedMood.label : 'Neutral';
+  const note = document.querySelector('.mood-text-area').value || '';
+  const prompt = `You are MindEase AI, a warm and evidence-based mental wellness coach. The user just checked in feeling "${mood}". ${note ? `They wrote: "${note}".` : ''} Give a brief, warm, personalized 2-3 sentence insight and one specific actionable tip. Be empathetic but concise. No bullet points.`;
+  await callClaude(prompt, 'aiResp', 'aiRespText');
+}
+
+async function askClaude(presetPrompt) {
+  const query = presetPrompt || document.getElementById('aiInput').value.trim();
+  if (!query) return;
+  const prompt = `You are MindEase AI, a warm and science-backed mental wellness coach. Answer this concisely and helpfully (3-5 sentences max): ${query}`;
+  document.getElementById('aiInput').value = '';
+  await callClaude(prompt, null, null, query);
+}
+
+async function callClaude(prompt, respContainerId, respTextId, userQuery) {
+  if (respContainerId) {
+    const el = document.getElementById(respContainerId);
+    const txt = document.getElementById(respTextId);
+    el.classList.add('visible');
+    txt.innerHTML = '<div class="loading-dots"><div class="ld"></div><div class="ld"></div><div class="ld"></div></div>';
+  }
+
+  let chatDiv = null;
+  if (!respContainerId) {
+    const chatResp = document.getElementById('chatResp');
+    chatDiv = document.createElement('div');
+    chatDiv.style.cssText = 'background:var(--bg3);border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;';
+    chatDiv.innerHTML = `<div style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">${userQuery.slice(0,60)}${userQuery.length>60?'…':''}</div><div class="loading-dots"><div class="ld"></div><div class="ld"></div><div class="ld"></div></div>`;
+    chatResp.prepend(chatDiv);
+  }
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{role: 'user', content: prompt}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || 'Something went wrong. Please try again.';
+
+    if (respContainerId) {
+      document.getElementById(respTextId).textContent = text;
+    } else if (chatDiv) {
+      chatDiv.querySelector('.loading-dots').innerHTML = `<span style="font-size:13px;color:var(--text2);line-height:1.6;">${text}</span>`;
+    }
+  } catch(e) {
+    const msg = 'Unable to connect. Please check your connection.';
+    if (respContainerId) document.getElementById(respTextId).textContent = msg;
+    else if (chatDiv) chatDiv.querySelector('.loading-dots').textContent = msg;
+  }
+}
+
+// Breathing exercise
+const phases = [
+  {label:'Inhale',dur:4000,scale:'scale(1.3)'},
+  {label:'Hold',dur:7000,scale:'scale(1.3)'},
+  {label:'Exhale',dur:8000,scale:'scale(0.85)'},
+];
+let phaseIdx = 0, cycleCount = 0;
+
+function startBreath() {
+  if (breathRunning) {
+    clearTimeout(breathTimer);
+    breathRunning = false;
+    document.getElementById('breathBtn').textContent = 'Start session';
+    document.getElementById('breathLabel').textContent = 'Ready';
+    document.getElementById('breathOrb').style.transform = '';
+    return;
+  }
+  breathRunning = true;
+  phaseIdx = 0; cycleCount = 0;
+  document.getElementById('breathBtn').textContent = 'Stop';
+  runPhase();
+}
+
+function runPhase() {
+  if (!breathRunning) return;
+  const ph = phases[phaseIdx];
+  document.getElementById('breathLabel').textContent = ph.label;
+  document.getElementById('breathOrb').style.transform = ph.scale;
+  breathTimer = setTimeout(() => {
+    phaseIdx = (phaseIdx + 1) % 3;
+    if (phaseIdx === 0) cycleCount++;
+    if (cycleCount >= 3) {
+      breathRunning = false;
+      document.getElementById('breathBtn').textContent = 'Start session';
+      document.getElementById('breathLabel').textContent = 'Done ✓';
+      document.getElementById('breathOrb').style.transform = '';
+      return;
+    }
+    runPhase();
+  }, ph.dur);
+}
+
+document.getElementById('aiInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') askClaude();
+});
+</script>
+</body>
+</html>
